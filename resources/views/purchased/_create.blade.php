@@ -54,7 +54,7 @@
                             <div class="col-md-6">
                                 <label for="">Gender</label>
                                 <select class="form-control" name="gender" id="">
-                                    <option value="" disabled>-- Masukkan Gender --</option>
+                                    <option value="" selected disabled>-- Masukkan Gender --</option>
                                     <option value="L" {{ old('gender', $bind->user->gender ?? '') == 'L' ?
                                         'selected'
                                         : '' }}>
@@ -83,7 +83,6 @@
                                 <label for="diantar">Pesanan Diantar?</label>
                                 <div>
                                     <input class="form-checkbox" type="checkbox" id="diantarCheckbox"> iya
-                                    <input class="form-checkbox" type="checkbox" id=""> tidak
                                 </div>
                             </div>
                             <div class="col-md-6">

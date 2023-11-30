@@ -6,29 +6,39 @@ use App\Models\Spesification;
 use App\Models\User;
 use App\Models\UserPurchased;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
 class UserPurchasedController extends Controller
 {
+
+    private $userPurchased;
+    private $spesifications;
+    private $checkUser;
+
+    public function __construct()
+    {
+        $this->userPurchased = UserPurchased::with(['user', 'spesification']);
+        $this->spesifications = Spesification::all();
+        $this->checkUser = User::latest()->first();
+    }
+
     public function index()
     {
-        $userPurchaseds = UserPurchased::with(['user', 'spesification'])->get();
+        $userPurchaseds = $this->userPurchased->get();
         return view('purchased.index', compact('userPurchaseds'));
     }
 
     public function create()
     {
-        $spesifications = Spesification::all();
-
+        $spesifications = $this->spesifications;
         return view('purchased.create', compact('spesifications'));
     }
 
     public function created()
     {
-        $spesifications = Spesification::all();
-        $checkUser = User::latest()->first();
-        $userPurchaseds = UserPurchased::with(['user', 'spesification'])->where('user_id', $checkUser->id)->get();
+        $spesifications = $this->spesifications;
+        $checkUser = $this->checkUser;
+        $userPurchaseds = $this->userPurchased->where('user_id', $checkUser->id)->get();
 
         return view('purchased._create', compact('spesifications', 'userPurchaseds'));
     }
@@ -77,16 +87,16 @@ class UserPurchasedController extends Controller
 
     public function edit()
     {
-        $id = User::latest()->first();
-        $spesifications = Spesification::all();
-        $bind = UserPurchased::with(['user', 'spesification'])->where('user_id', $id->_id)->first();
-        $userPurchaseds = UserPurchased::with(['user', 'spesification'])->where('user_id', $id->_id)->get();
+        $id = $this->checkUser;
+        $spesifications = $this->spesifications;
+        $bind = $this->userPurchased->where('user_id', $id->_id)->first();
+        $userPurchaseds = $this->userPurchased->where('user_id', $id->_id)->get();
         return view('purchased._create', compact('spesifications', 'bind', 'userPurchaseds'));
     }
 
     public function update(Request $request)
     {
-        $id = User::latest()->first();
+        $id = $this->checkUser;
         UserPurchased::where('user_id', $id->_id)->update([
             'spesification_id' => $request->spesification_id,
             'quantity_laundry' => $request->quantity_laundry,
@@ -134,7 +144,8 @@ class UserPurchasedController extends Controller
         return view('nota.index', compact('userPurchased'));
     }
 
-    public function destroy($id){
+    public function destroy($id)
+    {
         UserPurchased::where('user_id', $id)->delete();
         User::where('_id', $id)->delete();
         return redirect('/data-customer/entry-data')->with('success', 'Data Berhasil Di Hapus');

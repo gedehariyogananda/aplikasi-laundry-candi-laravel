@@ -57,7 +57,7 @@
                             <div class="col-md-6">
                                 <label for="">Gender</label>
                                 <select class="form-control" name="gender" id="">
-                                    <option value="" disabled>-- Masukkan Gender --</option>
+                                    <option value="" selected disabled>-- Masukkan Gender --</option>
                                     <option value="L" {{ old('gender', $bind->user->gender ?? '') == 'L' ?
                                         'selected'
                                         : '' }}>

@@ -2,8 +2,10 @@
 
 @section('content')
 
-
-<div class="card mt-5">
+<a href="{{ route('purchased.edit') }}" class="btn btn-primary mt-3">
+    <i class="fas fa-edit"></i> Edit Pemesanan
+</a>
+<div class="card mt-2">
     <div class="card-body">
         <div class="text-center">
             <img class="w-25" src="/img/icon.png" alt="">
@@ -12,7 +14,6 @@
         </div>
     </div>
 </div>
-
 
 <div class="card">
     <div class="card-body">

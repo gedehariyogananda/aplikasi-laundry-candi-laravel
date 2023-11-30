@@ -9,19 +9,29 @@ use Illuminate\Http\Request;
 
 class PaymentMethodController extends Controller
 {
+    private $checkUser;
+    private $payments;
+    private $users;
 
+    public function __construct()
+    {
+        $this->checkUser = User::latest()->first();
+        $this->payments = PaymentMethod::all();
+        $this->users = UserPurchased::with(['user', 'spesification']);
+    }
+    
     public function index()
     {
-        $checkUser = User::latest()->first();
-        $users = UserPurchased::with(['user', 'spesification'])->where('user_id', $checkUser->_id)->first();
-        $payments = PaymentMethod::all();
+        $checkUser = $this->checkUser;
+        $users = $this->users->where('user_id', $checkUser->_id)->first();
+        $payments = $this->payments;
         return view('checkout.index', compact('users', 'payments'));
     }
 
     public function update(Request $request)
     {
-        $checkUser = User::latest()->first();
-        UserPurchased::with(['user', 'spesification'])->where('user_id', $checkUser->_id)->update([
+        $checkUser = $this->checkUser;
+        $this->users->where('user_id', $checkUser->_id)->update([
             'status_laundry' => "Success",
             'payment_method_id' => $request->payment_method_id,
         ]);
